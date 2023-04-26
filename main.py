@@ -9,6 +9,7 @@ df_internet = pd.read_csv('df_internet.csv', parse_dates=True, index_col='dateti
 df_inflacion = pd.read_csv('df_inflacion.csv', parse_dates=True, index_col='d')
 df_ingresos = pd.read_csv('df_ingresos.csv', parse_dates=True, index_col='datetime')
 df_crecimiento_real = pd.read_csv('df_crecimiento_real.csv', parse_dates=True, index_col='datetime', names=['datetime', 'Crecimiento real por trimestre'])
+df_crecimiento_real_total = pd.read_csv('df_crecimiento_real_total.csv', parse_dates=True, index_col='datetime', names=['datetime', 'Crecimiento real total'])
 
 st.set_page_config(layout="wide")
 
@@ -76,8 +77,7 @@ if page == 'Dashboard':
    fig.update_layout(showlegend=False, xaxis_title='Año y trimestre', yaxis_title='Acceso a Internet cada 100 hogares')
    st.plotly_chart(fig, use_container_width = True)
 
-
-#Grafico de barras, crecimiento real
+#Grafico de barras, crecimiento real total por internet
 
    bar = go.Bar(
     x=df_crecimiento_real.index,
@@ -89,6 +89,21 @@ if page == 'Dashboard':
 )
    fig = go.Figure(data=[bar])
    fig.update_layout(title='Crecimiento real a nivel Nación de ingresos por Internet fijo (quitando inflación, expresado en %)', xaxis_title='Año y trimestre', yaxis_title='Crecimiento real (%)')
+   st.plotly_chart(fig, use_container_width = True)
+
+
+   #Grafico de barras, crecimiento real total telecomunicaciones
+
+   bar = go.Bar(
+    x=df_crecimiento_real_total.index,
+    y=df_crecimiento_real_total['Crecimiento real total'],
+    marker = dict(color = ['rgba(63, 195, 128, 1)' if x > 0 else 'rgba(219, 10, 91, 1)' for x in df_crecimiento_real_total['Crecimiento real total']], 
+                 line = dict(color='rgb(0,0,0)',width=1.5)),
+   text=df_crecimiento_real_total,
+        textposition='outside'
+)
+   fig = go.Figure(data=[bar])
+   fig.update_layout(title='Crecimiento real a nivel Nación de ingresos de Telecomunicaciones (quitando inflación, expresado en %)', xaxis_title='Año y trimestre', yaxis_title='Crecimiento real (%)')
    st.plotly_chart(fig, use_container_width = True)
 
 
